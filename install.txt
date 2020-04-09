@@ -1,0 +1,49 @@
+pacman -Syy archlinux-keyring
+pacman-key --refresh-keys;
+
+fdisk /dev/sd?
+
+mount /dev/sd?2 /mnt
+mkdir /mnt/boot
+mount /dev/sd?1 /mnt/boot
+swapon /dev/sd?3
+
+pacstrap /mnt base linux linux-firmware linux-headers net-tools netctl grub vim tmux openssh base-devel dhcpcd
+
+genfstab /mnt > /mnt/etc/fstab
+arch-chroot /mnt
+vim hostname
+ln -sv /usr/share/zoneinfo/Zulu /etc/localtime
+vim /etc/locale.gen
+locale-gen
+echo "KEYMAP=us" > /etc/vconsole.conf
+
+vim mkinitcpio.conf
+mkinitcpio -P
+cd /etc/netctl; cp -vf examples/ethernet-dhcp ./enpXsY; vim enpXsY
+systemctl enable sshd
+passwd
+
+grub-install --target=i386-pc /dev/sd?
+grub-mkconfig -o /boot/grub/grub.cfg
+
+exit
+umount -R /mnt
+reboot
+
+#basic
+pacman -S xfce4-goodies lightdm lightdm-gtk-greeter firefox proxychains gedit eog xfce4 xf86-video-intel xorg-server xorg-apps rsync wget git linux-headers sshfs hexchat pidgin keepassx weechat xscreensaver rxvt-unicode sakura beaver mc vifm pcmanfm unrar lrzip lz4 lzop p7zip file-roller xarchiver wipe filelight htop nmap gnupg pass bc calc gnome-calculator ntp net-tools keepass keepassxc openbox xorg-twm gummi lyx zim gdb tint2 conky scribus markdown emacs-nox texmacs emacs gucharmap r units task screen feh nitrogen zsh go jdk-openjdk dotnet-sdk ruby python3 python2 tk perl nasm
+#rust as user
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+
+#red
+curl -O https://blackarch.org/strap.sh
+pacman -S metasploit mingw-w64-gcc
+
+vim /etc/pacman.conf
+uncomment multilib, add ILoveCandy
+curl "https://www.archlinux.org/mirrorlist/?country=US&protocol=https&ip_version=4" | sed 's/#S/S/s > mirrorlist
+
+vim /etc/lightdm/lightdm.conf
+greeter-session=lightdm-gtk-greeter
